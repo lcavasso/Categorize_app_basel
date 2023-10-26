@@ -21,7 +21,7 @@ from pydub.playback import play
 from playsound import playsound
 
 
-# set how many ms of audio you want to annotate
+# set duration of audio you want to annotate
 desired_duration = 60 * 60	 # in seconds
 
 #number of minute-audio-clips in folder; index of row in df
