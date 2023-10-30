@@ -18,9 +18,10 @@ import os
 import datetime
 from pydub import AudioSegment
 from pydub.playback import play
+from playsound import playsound
 
 
-# set how many ms of audio you want to annotate
+# set duration of audio you want to annotate
 desired_duration = 60 * 60	 # in seconds
 
 #number of minute-audio-clips in folder; index of row in df
@@ -60,7 +61,6 @@ def play_sound(filepath):
 			print()
 			# then try playsound package
 			print("trying playsound")
-			from playsound import playsound
 			playsound(filepath)
 			# if it worked, keep using playsound
 			audioplayer = 'playsound'
@@ -117,13 +117,6 @@ def annotatorinfo():
 	global config_df
 	global outdir
 	global annotator_name
-
-	showinfo('Window', "Select a metadata file")
-	fname = askopenfilename(filetypes =(("CSV File", "*.csv"),("all files","*.*")),
-			 title = "Please choose a config.csv file")
-	fname = os.path.normpath(fname)
-	outdir = os.path.split(fname)[0]
-	config_df = pd.read_csv(fname).assign(outdir=outdir) # the master config file
 
 	# Get annotator's name
 	annotate = tk.Toplevel()
@@ -273,6 +266,8 @@ def main():
 	global speakercategory
 	global registercategory
 	global comments
+	global outdir
+	global config_df
 
 	root = tk.Tk() # refers to annotation window 
 	root.update()
@@ -338,7 +333,13 @@ def main():
 	tk.Button(frame, background="gray", text="   Play   ", command=repeat).grid(row=1, column=0)
 	tk.Button(frame, text="		Next	   ", command=combine_funcs(next_and_play_audio, clear), bg="gray").grid(row=1, column=2) 
 
-	app = annotatorinfo()
+	showinfo('Window', "Select a metadata file")
+	fname = askopenfilename(filetypes =(("CSV File", "*.csv"),("all files","*.*")),
+			 title = "Please choose a config.csv file")
+	fname = os.path.normpath(fname)
+	outdir = os.path.split(fname)[0]
+	config_df = pd.read_csv(fname).assign(outdir=outdir) # the master config file
+	annotatorinfo()
 	root.mainloop()
 
 if __name__ == "__main__":

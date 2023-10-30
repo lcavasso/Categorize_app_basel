@@ -301,6 +301,10 @@ def main(child_ID=sys.argv[1], birth_date=sys.argv[2], record_date=sys.argv[3], 
         tolerable_distance = float(tolerable_distance)
     else:
         tolerable_distance = int(tolerable_distance)
+    # and ask for minimum duration
+    print("You want clips no shorter than...")
+    minimum_duration = input('Minimum clip duration (in seconds): ')
+    minimum_duration = float(minimum_duration)
 
     # read the CSV output of segments.pl
     print("Reading segments data...")
@@ -314,10 +318,15 @@ def main(child_ID=sys.argv[1], birth_date=sys.argv[2], record_date=sys.argv[3], 
         row['endsec'] = float(row['endsec'])
         row['duration'] = row['endsec'] - row['startsec']
 
-    # make that into a pandas dataframe - helpful for merging segments later
+    # make that into a pandas dataframe - this allows easier data management
     if globals:
         global segments_df
     segments_df = pd.DataFrame(segments_data)
+
+    # enforce minimum duration
+    print("Enforcing minimum duration...")
+    segments_df = segments_df.loc[segments_df['duration'] >= minimum_duration]
+    print("")
 
     # filter to interesting segments
     print("Filtering segments with Lena...")
@@ -325,6 +334,8 @@ def main(child_ID=sys.argv[1], birth_date=sys.argv[2], record_date=sys.argv[3], 
     # limiting to choices made by user
     # add a column to the dataframe for which segments are interesting
     segments_df['interesting'] = False
+    # since I want to loop over indices, reset them to be sure they're sequential from 0
+    segments_df.reset_index(inplace=True)
     for i in range(len(segments_df)):
         row = segments_df.iloc[i]
         # filter according to user input
@@ -335,9 +346,10 @@ def main(child_ID=sys.argv[1], birth_date=sys.argv[2], record_date=sys.argv[3], 
             if row.segtype not in label_choices:
                 segments_df.at[i,'interesting'] = True
     # filter down to segments identified as interesting
-    segments_df = segments_df[segments_df['interesting']]
+    segments_df = segments_df.loc[segments_df['interesting']]
     # no further need for the 'interesting' column
     segments_df = segments_df.drop(columns='interesting')
+    print("")
 
     # merge segments
     # first merge any segments that are already adjacent until there are no more
