@@ -107,7 +107,7 @@ def notify_finished():
 		unit = 'minutes'
 	else:
 		printed_duration = int(duration_so_far)
-		unit = 'ms'
+		unit = 'seconds'
 	return showinfo('Annotation complete', str(printed_duration) + ' ' + unit + " of audio have been"
 		" annotated. Annotation is complete. You can close this app.")
 
