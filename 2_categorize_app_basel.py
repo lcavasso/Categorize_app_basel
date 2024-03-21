@@ -84,32 +84,44 @@ def combine_funcs(*funcs):
 
 # check if we are done annotating
 def check_done(source_df, annotated_dur, desired_dur=desired_duration):
-	# return True if done, False if not
+	# return False if not done, 'enough' if you annotated enough, or 'no more' if there's no more valid audio
 	# check if we've annotated enough
 	if annotated_dur > desired_dur:
 		print('You have annotated more than the minimum desired duration')
-		return True
+		return 'enough'
 	# check if there are more rows
 	elif len(source_df) == 0:
 		print('There is no more audio for you to annotate')
-		return True
+		return 'no more'
 	else:
 		return False
 
 
-# for notifying annotator that there's nothing left to code
-def notify_finished():
-	global job_done
-	job_done = True
+# for putting time into a nice human readable format
+def describe_time(duration_so_far):
 	# report duration annotated in minutes to 2 decimal places
 	if duration_so_far > 60:	# if duration > 1 min, print in min
-		printed_duration = round(duration_so_far/60, minute_decimals)
+		printed_duration = str(round(duration_so_far/60, minute_decimals))
 		unit = 'minutes'
 	else:
-		printed_duration = int(duration_so_far)
+		printed_duration = str(int(duration_so_far))
 		unit = 'seconds'
-	return showinfo('Annotation complete', str(printed_duration) + ' ' + unit + " of audio have been"
-		" annotated. Annotation is complete. You can close this app.")
+	description = printed_duration + ' ' + unit
+	return description
+
+
+# for notifying annotator that there's nothing left to code
+def notify_finished(reason):
+	global desired_duration
+	global job_done
+	job_done = True
+	time_annotated = describe_time(duration_so_far)
+	time_requested = describe_time(desired_duration)
+	if reason == 'enough':
+		finish_message = time_annotated + " of audio have been annotated out of " + time_requested + ". You can close this app."
+	elif reason == 'no more':
+		finish_message = time_annotated + " of audio have been annotated out of " + time_requested + ". There is no more audio for you to annotate. You can close this app."
+	return showinfo('Annotation complete', finish_message) 
 
 
 # get initial info about annotator
@@ -180,8 +192,9 @@ def get_resp_df():
 		for i in forbidden_indices:
 			config_df = config_df.drop(i, axis='index')
 	# if config_df is empty, it means we don't have anything else to annotate
-	if check_done(config_df, duration_so_far):
-		notify_finished()
+	reason_finished = check_done(config_df, duration_so_far)
+	if reason_finished:
+		notify_finished(reason_finished)
 	# play first audio clip
 	play_new_clip()
 
@@ -210,10 +223,10 @@ def next_audio():
 	duration_so_far += row['duration']
 
 	# check if we are done, then ensure we don't pick this row again
-	
 	# check if we're done annotating
-	if check_done(config_df, duration_so_far):
-		notify_finished()
+	reason_finished = check_done(config_df, duration_so_far)
+	if reason_finished:
+		notify_finished(reason_finished)
 	else:
 		# ensure we don't select this row in the future
 		config_df = config_df.drop(row.name)  # .name is where the original index is stored
@@ -229,9 +242,9 @@ def play_new_clip():
 	global audiofile
 
 	# check if there's anything left to annotate. if so, randomly pick a row
-	if check_done(config_df, duration_so_far):
-		print("No more files to annotate")
-		notify_finished()
+	reason_finished = check_done(config_df, duration_so_far)
+	if reason_finished:
+		notify_finished(reason_finished)
 	else:
 		row = config_df.iloc[0]			# select next row
 		if row['researcher_present']==1:
