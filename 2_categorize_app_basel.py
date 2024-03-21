@@ -195,8 +195,9 @@ def get_resp_df():
 	reason_finished = check_done(config_df, duration_so_far)
 	if reason_finished:
 		notify_finished(reason_finished)
-	# play first audio clip
-	play_new_clip()
+	if not reason_finished:
+		# play first audio clip
+		play_new_clip()
 
 
 # go to the next audio file
@@ -253,7 +254,7 @@ def play_new_clip():
 			print('No vocal activity in clip.')
 		elif row['sleeping']==1:		# if child is sleeping
 			print('Child is sleeping.')
-		audiofile = os.path.join(row.outdir, row.file_name)
+		audiofile = os.path.join(row.outdir, str(row.file_name))
 		print(idx, row.file_name) # keep us updated
 		play_sound(audiofile)
 
@@ -357,3 +358,5 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
+pass
