@@ -39,6 +39,10 @@ Several notebooks to reliably estimate ambient language characteristics of daylo
 
 `4_rater_reliability.ipynb` - estimates intra- and inter-rater agreement for language annotation on the basis of clips annotated two and three times. Also concatenates all clips annotated as 'unsure' into `filename_relisten.csv` to be fed into the Relisten application and listened to again by two annotators.
 
+### To check your inputs and outputs
+
+The output of `segments.pl` will show all of LENA's annotations. When you run `1_split_app_basel.py`, it will prompt you to filter to only certain LENA annotations. The `rejects.csv` file will show sound clips that did not meet the vocal activity detection threshold (but did match your LENA annotations of interest). The `config.csv` file will include all files that you'll be prompted to annotate with `2_categorize_app_biling.py` (i.e., ones that met both the vocal activity detection threshold and the LENA annotations you were interested in).
+
 ## Example Work Flow
 
 This is an example of a workflow to get you from a full daylong recording to one annotated for ambient language characteristics like language choice and speech type via random sampling. It assumes that you have all relevant libraries and contingencies installed. 
@@ -93,6 +97,7 @@ This is an example of a workflow to get you from a full daylong recording to one
 	When you have annotated 60 minutes of audio, you will be prompted with a message indicating that you have finished annotation. You can change this duration by changing the variable `desired_duration` in `2_categorize_app_basel.py`.
 	
 	If you had multiple annotators, you should merge their response files. These are named 'responses\_[name]\_.csv' (insert the annotator's name for [name]).
+
 
 ## Citations
 
