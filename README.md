@@ -23,7 +23,7 @@ The following dependencies are required to run the applications and scripts in t
 
 	conda activate py37
 
-## Description of Materials In The Repo
+## Description of materials in the repo
 
 ### To prepare daylong audio recordings for annotation and annotate them
 
@@ -43,7 +43,7 @@ Several notebooks to reliably estimate ambient language characteristics of daylo
 
 The output of `segments.pl` will show all of LENA's annotations. When you run `1_split_app_basel.py`, it will prompt you to filter to only certain LENA annotations. The `rejects.csv` file will show sound clips that did not meet the vocal activity detection threshold (but did match your LENA annotations of interest). The `config.csv` file will include all files that you'll be prompted to annotate with `2_categorize_app_biling.py` (i.e., ones that met both the vocal activity detection threshold and the LENA annotations you were interested in).
 
-## Example Work Flow
+## Example workflow
 
 This is an example of a workflow to get you from a full daylong recording to one annotated for ambient language characteristics like language choice and speech type via random sampling. It assumes that you have all relevant libraries and contingencies installed. 
 
