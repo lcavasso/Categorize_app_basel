@@ -69,7 +69,7 @@ This is an example of a workflow to get you from a full daylong recording to one
 	
 	![alt text](https://github.com/megseekosh/Categorize_app_v2/blob/master/output_directory_prompt.png "output_directory_prompt")
 	
-4. Customize dropdown menu options if desired
+4. Before annotating, customize dropdown menu options if desired
 
 	`2a_categorize_beginoptions.txt`, `2b_categorize_language.txt`, `2c_categorize_speaker.txt`, and `2d_categorize_register.txt` should be placed in the same directory as `2_categorize_app_basel.py`. `2_categorize_app_basel.py` will automatically read these files and use them to populate the dropdown menu options for annotation.
 	If you'd like to change these options, just edit the appropriate text file. Each option should be followed by a line break. You can use the default options as examples.
