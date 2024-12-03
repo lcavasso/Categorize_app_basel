@@ -41,6 +41,7 @@ audioplayer = False
 
 
 def play_sound(filepath):
+	print('trying to play', filepath)
 	global audioplayer
 	if audioplayer == 'pydub':
 		sound = AudioSegment.from_wav(filepath)
